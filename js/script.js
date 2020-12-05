@@ -105,25 +105,42 @@ window.addEventListener('DOMContentLoaded', () => {
         modalClose = modal.querySelector('.modal__close');
 
     modalTrigger.forEach(el => {
-        el.addEventListener('click', showModal);
+        el.addEventListener('click', () => {
+
+            //modal.classList.add('show');
+            //modal.classList.remove('hide');
+
+            //modal.classList.toggle('show'); //если нет добавляем
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; //экран за модальным окном не прокручивается
+        });
     });
 
-    function showModal() {
-        modal.style.display = 'block';
-    }
+    function closeModal() {
+        //modal.classList.add('hide');
+        //modal.classList.remove('show')
 
-    modalClose.addEventListener('click', hideModal);
+        //modal.classList.toggle('show'); //если есть убираем
 
-    function hideModal() {
         modal.style.display = 'none';
+        document.body.style.overflow = ''; //вернуть прокрутку при закрытии модальног окна
+
     }
 
+    modalClose.addEventListener('click', closeModal);
 
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
 
-
-
-
-
+    document.addEventListener('keydown', (ev) => { //при нажатии на клавиатуру
+        if (ev.code === 'Escape' && modal.style.display == 'block') {
+            closeModal();
+        }
+    });
 
 
 

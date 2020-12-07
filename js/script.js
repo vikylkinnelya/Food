@@ -104,17 +104,18 @@ window.addEventListener('DOMContentLoaded', () => {
         modal = document.querySelector('.modal'),
         modalClose = modal.querySelector('.modal__close');
 
+    function modalOpen() {
+        //modal.classList.add('show');
+        //modal.classList.remove('hide');
+
+        //modal.classList.toggle('show'); //если нет добавляем
+
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; //экран за модальным окном не прокручивается
+    }
+
     modalTrigger.forEach(el => {
-        el.addEventListener('click', () => {
-
-            //modal.classList.add('show');
-            //modal.classList.remove('hide');
-
-            //modal.classList.toggle('show'); //если нет добавляем
-
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; //экран за модальным окном не прокручивается
-        });
+        el.addEventListener('click', modalOpen);
     });
 
     function closeModal() {
@@ -125,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         modal.style.display = 'none';
         document.body.style.overflow = ''; //вернуть прокрутку при закрытии модальног окна
-
+        clearInterval(modalTimerId); //после модала он не открывается еще раз
     }
 
     modalClose.addEventListener('click', closeModal);
@@ -141,6 +142,19 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+
+    const modalTimerId = setTimeout(modalOpen, 50000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight == document.documentElement.scrollHeight) {
+            modalOpen();
+            removeEventListener('scroll', showModalByScroll); //после открытия один раз это событие удалыетс
+        }
+    }
+    //window.pageYOffset сколько пролистал 
+    //document.documentElement.clientHeight видимая часть для клиента
+
+    window.addEventListener('scroll', showModalByScroll);
 
 
 

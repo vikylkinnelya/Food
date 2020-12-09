@@ -228,11 +228,62 @@ window.addEventListener('DOMContentLoaded', () => {
         'menu__item'
     ).render();
 
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Загрузка...',
+        success: 'Спасибо! Скоро мы с Вами свяжемся.',
+        fail: 'Что-то пошло не так.',
+    };
+
+    forms.forEach(el => postData(el));
 
 
-    const modalForm 
+    function postData(form) {
+        form.addEventListener('submit', (ev) => {
+            ev.preventDefault(); //без перезагрузки страницы
 
-    const orderForm
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            
+            //когда используем связку xmlh http request'a обьекта + formData -- заголовок не нужен, он устанавливается автоматически
+            //request.setRequestHeader('Content-type', 'multipart/form-data');
+            
+            request.setRequestHeader('Content-type', 'applicztion/json, charset = UTF-8')
+            
+            const formData = new FormData(form); //если данные идут на сервер то в html inputa нужно всегда указывать name
+
+            const object = {};
+            formData.forEach( (value, key) => {
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            //request.send(formData); //без json
+            request.send(json); 
+
+
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = message.success;
+                    form.reset(); //сбрасыввем форму
+                    setTimeout(() => statusMessage.remove(), 300);
+                } else {
+                    statusMessage.textContent = message.fail;
+                }
+            });
+        });
+
+    }
+
+
 
 
 });

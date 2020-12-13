@@ -253,6 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
             `; //по центру
 
             form.insertAdjacentElement('afterend', statusMessage); //вставка изображения под формой(после нее)
+<<<<<<< HEAD
 
             const formData = new FormData(form); //собираем все данные из формы
             //если данные идут на сервер то в html inputa нужно всегда указывать name
@@ -282,6 +283,38 @@ window.addEventListener('DOMContentLoaded', () => {
                 }).finally(() => { // в любом случае
                     form.reset(); //сбрасывем форму
                 });
+=======
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+            //когда используем связку xmlh http request'a обьекта + formData -- 
+            //заголовок не нужен, он устанавливается автоматически
+            //request.setRequestHeader('Content-type', 'multipart/form-data');
+            request.setRequestHeader('Content-type', 'application/json; charset = UTF-8');
+            const formData = new FormData(form);
+            //если данные идут на сервер то в html inputa нужно всегда указывать name
+
+            const object = {};
+            formData.forEach((value, key) => {
+                object[key] = value;
+            });
+
+            const json = JSON.stringify(object);
+
+            //request.send(formData); //без json
+            request.send(json);
+
+            request.addEventListener('load', () => {
+                if (request.status === 200) {
+                    console.log(request.response); //результат ответа из сервера
+                    showThanksModal(message.success); //показать сообщение пользователю что все хорошо
+                    form.reset(); //сбрасывем форму
+                    statusMessage.remove();
+                } else {
+                    showThanksModal(message.fail); //показать сообщ что всё плохо
+                }
+            });
+>>>>>>> fa915c9e2a9beaf0710461ae9f868b1e4d8fe795
         });
     }
 

@@ -308,6 +308,8 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal(); //и закрывается модалка вообще
         }, 40000);
     }
-
-
+    fetch('http://localhost:3000/menu')
+        .then(data => data.json())
+        .then(res => console.log(res));
+    
 });

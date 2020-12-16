@@ -198,6 +198,15 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /* 
+    //без axios
+    getResourse('http://localhost:3000/menu') 
+        .then(data => {
+            data.forEach(({ img, altimg, title, descr, price}) => { //деструктуриз
+                new FoodCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        }); 
+        
     const getResourse = async (url) => { //настраивает запрос 
         const res = await fetch(url);
 
@@ -206,22 +215,17 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         return await res.json(); //дожидаетс и возвращает промис
-    };
+    };    
+    */
 
-    getResourse('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({
-                img,
-                altimg,
-                title,
-                descr,
-                price
-            }) => { //деструктуриз
+    axios.get('http://localhost:3000/menu')
+        .then(data => data.data.forEach(({ img, altimg, title, descr, price}) => { //деструктуриз
                 new FoodCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
-        });
+        }));
 
-    /* getResourse('http://localhost:3000/menu')
+    /* 
+    //вариант 2
+    getResourse('http://localhost:3000/menu')
         .then(data => createCard(data)); // получает масив
 
     function createCard(data) {
@@ -247,7 +251,6 @@ window.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.menu .container').append(element);
         });
     } */
-
 
     const forms = document.querySelectorAll('form');
 
@@ -335,6 +338,63 @@ window.addEventListener('DOMContentLoaded', () => {
         .then(data => data.json());
 
 
+    /* получить все элементы
+    индекс параметр кто текущий
+    использовать инд или изменять его
+    функция показ слайдов:
+    принимает индекс и показывает текущий и скрывает другие
+    если кликать до конца, потом переход в начало
+    если кликать в начало -- переход до конца
 
+    после функции навесить обработчик событий на стрелки
+    вправо = выполняется эта функция, показ следующий, изменять индекс, будет +1
+    если влево, то индекс -1
+    нумерация, определить сколько слайдеров, отобразить общее
+    отобраить текущий в зависимости от индекса
+    если менше 10, подставлять 0
+ */
+
+    const slides = document.querySelectorAll('.offer__slide'),
+        prevBtn = document.querySelector('.offer__slider-prev'),
+        nextBtn = document.querySelector('.offer__slider-next');
+
+    let
+        slideIdx = +document.getElementById('current').innerText,
+        currSliderNumber = document.querySelectorAll('#current'),
+        totalSliderCount = document.querySelector('#total');
+
+        getZero(totalSliderCount.textContent);
+
+    function showSliders(curr = slideIdx) {
+        slides.forEach( el => el.classList.add('hide'));
+        
+        if (curr > slides.length) {
+            slideIdx = 1;
+        }
+        if (curr < 1) {
+            slideIdx = 1;
+        }
+        
+        slides[slideIdx-1].classList.remove('hide');
+        slides[slideIdx-1].classList.add('show');
+        
+        currSliderNumber.innerText = getZero(slideIdx);
+    }
+
+    showSliders();
+
+    nextBtn.addEventListener('click', (ev) => {
+        slideIdx++;
+        showSliders(slideIdx);
+        
+    });
+
+    prevBtn.addEventListener('click', (ev) => {
+        slideIdx--;
+        showSliders(slideIdx);
+    });
+    
+    
+    
 
 });

@@ -362,8 +362,8 @@ window.addEventListener('DOMContentLoaded', () => {
         slidesField = document.querySelector('.offer__slider-inner'),
         width = window.getComputedStyle(slidesWrapper).width,
         slider = document.querySelector('.offer__slider'),
-        indicators = document.createElement('ol'),
-        dotsList = [];
+        indicators = document.createElement('ol'), //точечки слайдера
+        dotsList = []; //для установки актив/нет
 
     let slideIdx = 1,
         totalSliderCount = document.querySelector('#total'),
@@ -392,20 +392,24 @@ window.addEventListener('DOMContentLoaded', () => {
         indicators.append(dot);
         dotsList.push(dot);
     }
-    
-    const dots = document.querySelectorAll('.dot');
 
-    dots.forEach( el => el.addEventListener('click', (ev) => {
-        offset = +width.slice(0, width.length - 2 );
-        offset = +width.slice(0, width.length - 2 ) * (ev.target.dataset.idx-1);
-        slidesField.style.transform = `translateX(-${offset}px)`; 
-
-        currSliderNumber.innerText = getZero(ev.target.dataset.idx); //добавить 0 к текущему номеру
-        
+    function makeDotsOpacity() {
         dotsList.forEach(el => el.style.opacity = '0.5'); //все кнопки гаснут
-        dotsList[ev.target.dataset.idx-1].style.opacity = 1; //горит активная
+        dotsList[slideIdx-1].style.opacity = 1; //горит активная
+    }
+
+    dotsList.forEach( el => el.addEventListener('click', (ev) => {
+        slideIdx = ev.target.dataset.idx;
+        offset = +width.slice(0, width.length - 2 );
+        offset = +width.slice(0, width.length - 2 ) * (slideIdx-1);
+        slidesField.style.transform = `translateX(-${offset}px)`; 
+        
+        currSliderNumber.innerText = getZero(slideIdx); //добавить 0 к текущему номеру
+        
+        makeDotsOpacity();
     }));
 
+    
 
     nextBtn.addEventListener('click',() => {
         if (offset == +width.slice(0, width.length - 2 ) * (slides.length - 1)) {
@@ -423,8 +427,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         currSliderNumber.innerText = getZero(slideIdx);
         
-        dotsList.forEach(el => el.style.opacity = '0.5');
-        dotsList[slideIdx-1].style.opacity = 1;  
+        makeDotsOpacity();
     });
 
     prevBtn.addEventListener('click',() => {
@@ -443,9 +446,7 @@ window.addEventListener('DOMContentLoaded', () => {
         
         currSliderNumber.innerText = getZero(slideIdx);
 
-        dotsList.forEach(el => el.style.opacity = '0.5');
-        dotsList[slideIdx-1].style.opacity = 1;
-        
+        makeDotsOpacity();
     });
     
     currSliderNumber.innerText = getZero(slideIdx);
@@ -480,16 +481,7 @@ window.addEventListener('DOMContentLoaded', () => {
         showSliders(slideIdx);
     });
     */
-    
-    
-    /* генерация точек скриптом, расположение внизу слайдера
-    получить как элемент весь слайдер, не только обертку
-    установить ему позишн релатив , тк точки абсолютно спозиционированы и прикрепл к низу слайдера
-    создать обертку для кнопок
-    созд столько точек, сколько слайдов, цикл/перебор 
-    для каждой точки свой характерный атрибут
-    созд класс активности, чтобы понимать какая акт
-    клик по соотв точке перемещает на соотв слайд */
+
 
     
     

@@ -360,15 +360,15 @@ window.addEventListener('DOMContentLoaded', () => {
         currSliderNumber = document.querySelector('#current'),
         slidesWrapper = document.querySelector('.offer__slider-wrapper'),
         slidesField = document.querySelector('.offer__slider-inner'),
-        width = window.getComputedStyle(slidesWrapper).width;
+        width = window.getComputedStyle(slidesWrapper).width,
+        slider = document.querySelector('.offer__slider'),
+        indicators = document.createElement('ol'),
+        dotsList = [];
 
-    let slideIdx = +document.getElementById('current').innerText,
+    let slideIdx = 1,
         totalSliderCount = document.querySelector('#total'),
         offset = 0;
         
-
-
-    
     slidesField.style.width = 100 * slides.length + '%';
     slidesField.style.display = 'flex';
     slidesField.style.transition = '0.5s all';
@@ -377,13 +377,42 @@ window.addEventListener('DOMContentLoaded', () => {
 
     slides.forEach(slide => slide.style.width = width); //для всех слайдов одинаковую ширину
 
+    slider.style.position = 'relative';
+    
+    indicators.classList.add('carousel-indicators');
+    slider.append(indicators);
+
+    for (let i = 1; i <= slides.length; i++) {
+        const dot = document.createElement('li'); 
+        dot.classList.add('dot');
+        dot.dataset.idx = `${i}`;
+        if (i == 1) {
+            dot.style.opacity = 1; //первая кнопка сначала всегда активна
+        }
+        indicators.append(dot);
+        dotsList.push(dot);
+    }
+    
+    const dots = document.querySelectorAll('.dot');
+
+    dots.forEach( el => el.addEventListener('click', (ev) => {
+        offset = +width.slice(0, width.length - 2 );
+        offset = +width.slice(0, width.length - 2 ) * (ev.target.dataset.idx-1);
+        slidesField.style.transform = `translateX(-${offset}px)`; 
+
+        currSliderNumber.innerText = getZero(ev.target.dataset.idx); //добавить 0 к текущему номеру
+        
+        dotsList.forEach(el => el.style.opacity = '0.5'); //все кнопки гаснут
+        dotsList[ev.target.dataset.idx-1].style.opacity = 1; //горит активная
+    }));
+
+
     nextBtn.addEventListener('click',() => {
         if (offset == +width.slice(0, width.length - 2 ) * (slides.length - 1)) {
             offset = 0;
         } else {
             offset += +width.slice(0, width.length - 2 );
         }
-        
         slidesField.style.transform = `translateX(-${offset}px)`;
         
         if (slideIdx == slides.length) {
@@ -391,7 +420,11 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             slideIdx++;
         }
+        
         currSliderNumber.innerText = getZero(slideIdx);
+        
+        dotsList.forEach(el => el.style.opacity = '0.5');
+        dotsList[slideIdx-1].style.opacity = 1;  
     });
 
     prevBtn.addEventListener('click',() => {
@@ -407,9 +440,15 @@ window.addEventListener('DOMContentLoaded', () => {
         } else {
             slideIdx--;
         }
+        
         currSliderNumber.innerText = getZero(slideIdx);
+
+        dotsList.forEach(el => el.style.opacity = '0.5');
+        dotsList[slideIdx-1].style.opacity = 1;
+        
     });
     
+    currSliderNumber.innerText = getZero(slideIdx);
     getZero(totalSliderCount.textContent);
 
     /* 
@@ -443,5 +482,20 @@ window.addEventListener('DOMContentLoaded', () => {
     */
     
     
+    /* генерация точек скриптом, расположение внизу слайдера
+    получить как элемент весь слайдер, не только обертку
+    установить ему позишн релатив , тк точки абсолютно спозиционированы и прикрепл к низу слайдера
+    создать обертку для кнопок
+    созд столько точек, сколько слайдов, цикл/перебор 
+    для каждой точки свой характерный атрибут
+    созд класс активности, чтобы понимать какая акт
+    клик по соотв точке перемещает на соотв слайд */
 
+    
+    
+    
+    
+    
+
+    
 });

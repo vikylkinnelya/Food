@@ -2,10 +2,6 @@
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    //скрыть ненужные табы
-    //показать нужный таб
-    //создать обработчик событий, который будет манипулировать функциями
-
     const tabs = document.querySelectorAll('.tabheader__item'), //те три стиля питания
         tabsContent = document.querySelectorAll('.tabcontent'),
         tabsParent = document.querySelector('.tabheader__items'); //родитель для последующего делегирования событий
@@ -41,13 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
-
-    //функция устан таймер
-    //определтя разницу во времени, дедлайн
-    //вычислить время
-    //найти разницу
-    //обновление таймера
 
     const deadline = '2020-12-31';
 
@@ -337,23 +326,6 @@ window.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/menu')
         .then(data => data.json());
 
-
-    /* получить все элементы
-    индекс параметр кто текущий
-    использовать инд или изменять его
-    функция показ слайдов:
-    принимает индекс и показывает текущий и скрывает другие
-    если кликать до конца, потом переход в начало
-    если кликать в начало -- переход до конца
-
-    после функции навесить обработчик событий на стрелки
-    вправо = выполняется эта функция, показ следующий, изменять индекс, будет +1
-    если влево, то индекс -1
-    нумерация, определить сколько слайдеров, отобразить общее
-    отобраить текущий в зависимости от индекса
-    если менше 10, подставлять 0
- */
-
     const slides = document.querySelectorAll('.offer__slide'),
         prevBtn = document.querySelector('.offer__slider-prev'),
         nextBtn = document.querySelector('.offer__slider-next'),
@@ -400,8 +372,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     dotsList.forEach( el => el.addEventListener('click', (ev) => {
         slideIdx = ev.target.dataset.idx;
-        offset = +width.slice(0, width.length - 2 );
-        offset = +width.slice(0, width.length - 2 ) * (slideIdx-1);
+        offset = +width.replace(/\D/g, '');
+        offset = +width.replace(/\D/g, '') * (slideIdx-1);
         slidesField.style.transform = `translateX(-${offset}px)`; 
         
         currSliderNumber.innerText = getZero(slideIdx); //добавить 0 к текущему номеру
@@ -409,18 +381,16 @@ window.addEventListener('DOMContentLoaded', () => {
         makeDotsOpacity();
     }));
 
-    
-
     nextBtn.addEventListener('click',() => {
-        if (offset == +width.slice(0, width.length - 2 ) * (slides.length - 1)) {
+        if (offset == +width.replace(/\D/g, '') * (slides.length - 1)) { //если максимум, перейти в начало
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2 );
+            offset += +width.replace(/\D/g, ''); //отступ увеличивается на один слайд
         }
         slidesField.style.transform = `translateX(-${offset}px)`;
         
-        if (slideIdx == slides.length) {
-            slideIdx = 1;
+        if (slideIdx == slides.length) { 
+            slideIdx = 1; //если у самого конца -- перейти в начало
         } else {
             slideIdx++;
         }
@@ -431,15 +401,15 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     prevBtn.addEventListener('click',() => {
-        if (offset == 0) {
-            offset = +width.slice(0, width.length - 2 ) * (slides.length - 1);
+        if (offset == 0) { //если минимум -- перейти в конец
+            offset = +width.replace(/\D/g, '') * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2 );
+            offset -= +width.replace(/\D/g, ''); //уменьшение отступа на один слайд
         }
         slidesField.style.transform = `translateX(-${offset}px)`;
     
         if (slideIdx == 1) {
-            slideIdx = slides.length;
+            slideIdx = slides.length; //если у самого начала -- перейти в конец
         } else {
             slideIdx--;
         }
@@ -452,7 +422,8 @@ window.addEventListener('DOMContentLoaded', () => {
     currSliderNumber.innerText = getZero(slideIdx);
     getZero(totalSliderCount.textContent);
 
-    /* 
+    /*
+    //вариант попроще
     function showSliders(curr = slideIdx) {
         slides.forEach( el => el.classList.add('hide'));
         
@@ -479,10 +450,9 @@ window.addEventListener('DOMContentLoaded', () => {
     prevBtn.addEventListener('click', (ev) => {
         slideIdx--;
         showSliders(slideIdx);
-    });
-    */
+    }); */
 
-
+    
     
     
     

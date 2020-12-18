@@ -458,9 +458,21 @@ window.addEventListener('DOMContentLoaded', () => {
 
     
     const result = document.querySelector('.calculating__result span');
-    let sex = 'female', //по умолчанию для работающей формы, где изнач чтото выбрано
-        height, weight, age, 
-        ratio = '1.375';
+    
+    let sex, height, weight, age, ratio;
+
+    if (localStorage.getItem('sex')) {
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');
+    }
+    if (localStorage.getItem('ratio')) {
+        ratio = localStorage.getItem('ratio');
+    } else {
+        ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    }
 
     function calcTotal () {
         if (!sex || !height || !weight || !age || !ratio){ //если чтото не заполнено
@@ -475,15 +487,33 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     calcTotal();
 
-    function getStaticInformation(parentSelector, activeClass) {
-        const elements = document.querySelectorAll(`${parentSelector} div`); //все дивы внутри родителя
+    function initLocalSettings(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+            el.classList.remove(activeClass);
+            if (el.getAttribute('id') === localStorage.getItem('sex')) {
+                el.classList.add(activeClass);
+            }
+            if (el.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                el.classList.add(activeClass);
+            }       
+        });
+    }
+    initLocalSettings('#gender div', 'calculating__choose-item_active');
+    initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
+
+
+    function getStaticInformation(selector, activeClass) {
+        const elements = document.querySelectorAll(selector); //все дивы внутри родителя
 
         elements.forEach( el => {
             el.addEventListener('click', (ev) => {
                 if (ev.target.getAttribute('data-ratio')) { 
                     ratio = +ev.target.getAttribute('data-ratio'); //рацион
+                    localStorage.setItem('ratio', +ev.target.getAttribute('data-ratio')); //сохр в браузере знач польз
                 } else {
                     sex = ev.target.getAttribute('id'); //получаем пол
+                    localStorage.setItem('sex', ev.target.getAttribute('id')); //сохр в браузере значение пользователя
                 }
                 elements.forEach(el => el.classList.remove(activeClass)); //скрыть активн неактивных
             
@@ -493,13 +523,19 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    getStaticInformation('#gender', 'calculating__choose-item_active'); //для пола
-    getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active'); //для физ активности
+    getStaticInformation('#gender div', 'calculating__choose-item_active'); //для пола
+    getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active'); //для физ активности
 
     function getDynamicInformation(selector) {
         const input = document.querySelector(selector);
 
         input.addEventListener('input', () => {
+            if (input.value.match(/\D/g)) { //при вводе букв
+                input.style.boxShadow = '0px 4px 13px 5px rgba(255, 0, 0, 0.2)'; //горит подсветка
+            } else {
+                input.style.boxShadow = '0 4px 15px rgba(0,0,0,.2)'; //если цифры , подсветка убирается
+            }
+            
             switch(input.getAttribute('id')) {
                 case 'height':
                     height = +input.value;

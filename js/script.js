@@ -3,23 +3,19 @@
 window.addEventListener('DOMContentLoaded', () => {
 
     const tabs = require('./modules/tabs'),
-        calculator = require('./modules/calculator'),
-        cards = require('./modules/cards'),
-        forms = require('./modules/forms'),
-        modal = require('./modules/modal'),
-        slides = require('./modules/slides'),
-        timer = require('./modules/timer');
+          modal = require('./modules/modal'),
+          timer = require('./modules/timer'),
+          cards = require('./modules/cards'),
+          calc = require('./modules/calc'),
+          forms = require('./modules/forms'),
+          slider = require('./modules/slider');
 
     tabs();
-    calculator();
-    cards();
-    forms();
     modal();
-    slides();
     timer();
-
-
-
-
+    cards();
+    calc();
+    forms();
+    slider();
 
 });

@@ -1,5 +1,12 @@
-function timer() {
-    const deadline = '2020-12-31';
+function getZero(num) {
+    if (num >= 0 && num < 10) {
+        return `0${num}`; //добавляется 0 если число однозначное
+    } else {
+        return num;
+    }
+}
+
+function timer(id, deadline) {
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - new Date(),
@@ -14,14 +21,6 @@ function timer() {
             'minutes': minutes,
             'seconds': seconds,
         };
-    }
-
-    function getZero(num) {
-        if (num >= 0 && num < 10) {
-            return `0${num}`; //добавляется 0 если число однозначное
-        } else {
-            return num;
-        }
     }
 
     function setClock(selector, endtime) {
@@ -50,8 +49,10 @@ function timer() {
             }
         }
     }
-    setClock('.timer', deadline);
-
+    setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;
+export {
+    getZero
+};

@@ -1,6 +1,9 @@
-function forms() {
+import {closeModal, modalOpen} from './modal';
+import {postData} from '../servises/servises';
 
-    const forms = document.querySelectorAll('form');
+function forms(formSelector, modalTimerId) {
+
+    const forms = document.querySelectorAll(formSelector);
 
     const message = {
         loading: 'img/form/spinner.svg',
@@ -11,18 +14,6 @@ function forms() {
     forms.forEach(el => {
         bindPostData(el);
     });
-
-    const postData = async (url, data) => { //настраивает запрос 
-        const res = await fetch(url, { //дождаться результата
-            method: 'POST', //посылает запрос на сервер
-            headers: {
-                'Content-type': 'application/json; charset = UTF-8'
-            },
-            body: data
-        });
-        return await res.json(); //дожидаетс и возвращает промис
-    };
-
 
     function bindPostData(form) {
         form.addEventListener('submit', (ev) => {
@@ -62,7 +53,7 @@ function forms() {
     function showThanksModal(message) {
         const prevModal = document.querySelector('.modal__dialog');
         prevModal.classList.add('hide');
-        modalOpen();
+        modalOpen('.modal', modalTimerId);
 
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
@@ -73,13 +64,13 @@ function forms() {
             </div>
         `;
 
-        modal.append(thanksModal);
+        document.querySelector('.modal').append(thanksModal);
 
         setTimeout(() => {
             thanksModal.remove(); //посл 4сек удалется окно благодарн
             prevModal.classList.add('show'); //и возвращается норм модал
             prevModal.classList.remove('hide'); //на будушее если его снова откроют
-            closeModal(); //и закрывается модалка вообще
+            closeModal('.modal'); //и закрывается модалка вообще
         }, 40000);
     }
     fetch('http://localhost:3000/menu')
@@ -87,4 +78,4 @@ function forms() {
 
 }
 
-module.exports = forms;
+export default forms;

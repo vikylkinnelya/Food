@@ -1,17 +1,18 @@
-function slides() {
-    const slides = document.querySelectorAll('.offer__slide'),
-        prevBtn = document.querySelector('.offer__slider-prev'),
-        nextBtn = document.querySelector('.offer__slider-next'),
-        currSliderNumber = document.querySelector('#current'),
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
+import {getZero} from './timer';
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
+    const slides = document.querySelectorAll(slide),
+        prevBtn = document.querySelector(prevArrow),
+        nextBtn = document.querySelector(nextArrow),
+        totalSliderCount = document.querySelector(totalCounter),
+        currSliderNumber = document.querySelector(currentCounter),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field),
         width = window.getComputedStyle(slidesWrapper).width,
-        slider = document.querySelector('.offer__slider'),
+        slider = document.querySelector(container),
         indicators = document.createElement('ol'), //точечки слайдера
         dotsList = []; //для установки актив/нет
 
     let slideIdx = 1,
-        totalSliderCount = document.querySelector('#total'),
         offset = 0;
 
     slidesField.style.width = 100 * slides.length + '%';
@@ -130,4 +131,4 @@ function slides() {
     }); */
 }
 
-module.exports = slides;
+export default slider;

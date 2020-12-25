@@ -1,7 +1,7 @@
-function tabs() {
-    const tabs = document.querySelectorAll('.tabheader__item'), //те три стиля питания
-        tabsContent = document.querySelectorAll('.tabcontent'),
-        tabsParent = document.querySelector('.tabheader__items'); //родитель для последующего делегирования событий
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
+    const tabs = document.querySelectorAll(tabsSelector ), //те три стиля питания
+        tabsContent = document.querySelectorAll(tabsContentSelector),
+        tabsParent = document.querySelector(tabsParentSelector); //родитель для последующего делегирования событий
 
     function hideTabContent() {
         tabsContent.forEach(tab => {
@@ -10,14 +10,14 @@ function tabs() {
         });
 
         tabs.forEach(tab => {
-            tab.classList.remove('tabheader__item_active'); //удаляем класс активности
+            tab.classList.remove(activeClass); //удаляем класс активности
         });
     }
 
     function showTabContent(i = 0) { //по умолчанию 0
         tabsContent[i].classList.add('show', 'fade'); //показать 
         tabsContent[i].classList.remove('hide');
-        tabsContent[i].classList.add('tabheader__item_active'); //добавляем класс активности, чтобы показывалось
+        tabsContent[i].classList.add(activeClass); //добавляем класс активности, чтобы показывалось
     }
 
     hideTabContent();
@@ -25,7 +25,7 @@ function tabs() {
 
     tabsParent.addEventListener('click', (ev) => { //обертка со всеми табами делегир одинаковое событие от клика на все
         const target = ev.target;
-        if (target && target.classList.contains('tabheader__item')) { //ищем таб
+        if (target && target.classList.contains(tabsSelector.slice(1))) { //ищем таб
             tabs.forEach((el, idx) => { //перебрать все табы
                 if (target == el) { //сравнить табы с искомым
                     hideTabContent(); //скрыть старые табы
@@ -37,4 +37,4 @@ function tabs() {
 }
 
 
-module.exports = tabs;
+export default tabs;

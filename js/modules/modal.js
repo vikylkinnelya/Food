@@ -59,7 +59,7 @@ function modal(trigerSelector, modalSelector, modalTimerId) {
     //document.documentElement.clientHeight видимая часть для клиента
 
     window.addEventListener('scroll', showModalByScroll);
-
+    
 }
 
 export default modal;
